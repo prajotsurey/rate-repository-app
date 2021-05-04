@@ -20,12 +20,14 @@ const AppBar = () => {
   <View flexDirection="row" style={styles.container}>
     <ScrollView horizontal>
       <Pressable style={{paddingRight:10}}>
-        <Text fontWeight="bold" fontSize="heading" color="textSecondary">
+      <Link to="/" style={{paddingRight:10}}>
+        <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
           Repositories
         </Text>
+      </Link>
       </Pressable>
       <Link to="/signin" style={{paddingRight:10}}>
-        <Text fontWeight="bold" fontSize="heading" color="textSecondary">
+        <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
           Sign-in
         </Text>
       </Link>
