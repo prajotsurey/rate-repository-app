@@ -6,6 +6,8 @@ import { Formik } from 'formik';
 import View from './View';
 import themes from '../theme';
 import * as yup from 'yup';
+import useSignIn from '../hooks/useSignIn';
+import { useHistory } from 'react-router-native';
 
 const initialValues={
   username:'',
@@ -13,8 +15,8 @@ const initialValues={
 };
 
 const validationSchema = yup.object().shape({
-  username: yup.string().required('Username is required').length(5,'Username must be longer'),
-  password: yup.string().required('Password is required').length(5,'Password must be longer')
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required')
 });
 
 const styles = StyleSheet.create({
@@ -56,16 +58,23 @@ const SignInForm = ({onSubmit}) => {
 };
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values);
-  };
+  const [signIn] = useSignIn();
+  const history = useHistory();
 
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    try {
+      await signIn({ username, password });
+      history.push('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return(
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
       {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
     </Formik>
   );
 };
-
 
 export default SignIn;
