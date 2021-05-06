@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import Counts from './Counts';
-import View from './View';
-import Text from './Text';
-import theme from '../theme';
+import Counts from '../Counts';
+import View from '../View';
+import Text from '../Text';
+import theme from '../../theme';
 
 const RepositoryItem = ({item}) => {
 
@@ -39,13 +39,13 @@ const RepositoryItem = ({item}) => {
               }}/>
             <View alignItems="start" style={{flexGrow:4}}>
               <View flexDirection="row" style={{marginBottom:7}}>
-                <Text style={{flex:1}} fontWeight="bold" >{item.fullName}</Text>
+                <Text style={{flex:1}} testID='fullName' fontWeight="bold" >{item.fullName}</Text>
               </View>
               <View flexDirection="row" style={{marginBottom:7}}>
-                <Text style={{flex:1}} color="textSecondary" >{item.description}</Text>
+                <Text style={{flex:1}} testID='description' color="textSecondary" >{item.description}</Text>
               </View>  
               <View flexDirection="row" style={styles.languageContainer}>
-                <Text style={{color:'white'}}>{item.language}</Text>
+                <Text style={{color:'white'}} testID='language' >{item.language}</Text>
               </View>
             </View>
           </View>

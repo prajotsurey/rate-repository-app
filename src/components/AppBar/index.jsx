@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Pressable, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
-import theme from '../theme';
-import Text from './Text';
-import View from './View';
+import theme from '../../theme';
+import Text from '../Text';
+import View from '../View';
 import { Link, useHistory } from "react-router-native";
-import useAuthorize from "../hooks/useAuthorize";
-import useAuthStorage from '../hooks/useAuthStorage';
+import useAuthorize from "../../hooks/useAuthorize";
+import useAuthStorage from '../../hooks/useAuthStorage';
 import { useApolloClient } from '@apollo/client';
 
 const styles = StyleSheet.create({

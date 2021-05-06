@@ -1,6 +1,6 @@
 import React from 'react';
-import Text from './Text';
-import View from './View';
+import Text from '../Text';
+import View from '../View';
 
 const Counts = ({item}) => {
 
@@ -15,7 +15,7 @@ const Counts = ({item}) => {
   return(
     <View flexDirection="row" justifyContent="space-between">
       <View alignItems="center">
-        <Text fontWeight='bold'>
+        <Text fontWeight='bold' testID='stars'>
         {converter(item.stargazersCount)}
         </Text>
         <Text color="textSecondary" >
@@ -23,7 +23,7 @@ const Counts = ({item}) => {
         </Text>
       </View>
       <View alignItems="center">
-        <Text fontWeight='bold'>
+        <Text fontWeight='bold' testID='forks'>
         {converter(item.forksCount)}
         </Text>
         <Text color="textSecondary" > 
@@ -31,7 +31,7 @@ const Counts = ({item}) => {
         </Text>
       </View>
       <View alignItems="center">
-        <Text fontWeight='bold'>
+        <Text fontWeight='bold' testID='reviews'>
         {converter(item.reviewCount)}
         </Text>
         <Text color="textSecondary" >
@@ -39,10 +39,10 @@ const Counts = ({item}) => {
         </Text>
       </View>
       <View alignItems="center">
-        <Text fontWeight='bold'>
+        <Text fontWeight='bold' testID='rating'>
         {item.ratingAverage}
         </Text>
-        <Text color="textSecondary" >
+        <Text color="textSecondary">
         Rating
         </Text>
       </View>

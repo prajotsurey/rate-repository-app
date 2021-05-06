@@ -1,12 +1,12 @@
 import React from 'react';
-import Text from './Text';
+import Text from '../Text';
 import {Pressable, StyleSheet} from 'react-native';
-import FormikTextInput from './FormikTextInput';
+import FormikTextInput from '../FormikTextInput';
 import { Formik } from 'formik';
-import View from './View';
-import themes from '../theme';
+import View from '../View';
+import themes from '../../theme';
 import * as yup from 'yup';
-import useSignIn from '../hooks/useSignIn';
+import useSignIn from '../../hooks/useSignIn';
 import { useHistory } from 'react-router-native';
 
 const initialValues={
