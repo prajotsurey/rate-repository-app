@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, View, StyleSheet, Pressable } from 'react-native';
+import { useHistory } from 'react-router';
 import useRepositories from '../../hooks/useRepositories';
 import theme from '../../theme';
 import RepositoryItem from '../RepositoryItem';
@@ -14,12 +15,22 @@ const styles = StyleSheet.create({
 });
 
 export const RepositoryListContainer = ({ repositories }) => {
+  
+  const history = useHistory();
+
   const repositoryNodes = repositories
     ? repositories.edges.map(edge => edge.node)
     : [];
 
   const renderItem = ({item}) => {
-    return(<RepositoryItem item={item}/>);
+    const onPress = () => {
+      history.push(`/repository/${item.id}`);
+    };
+    return(
+      <Pressable onPress={onPress}>
+        <RepositoryItem item={item} showButton={false}/>
+      </Pressable>
+    );
   };
 
   return (
