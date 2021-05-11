@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { FlatList, View, StyleSheet, Pressable } from 'react-native';
+import { FlatList, StyleSheet, Pressable, TextInput } from 'react-native';
 import { useHistory } from 'react-router';
 import useRepositories from '../../hooks/useRepositories';
 import theme from '../../theme';
 import RepositoryItem from '../RepositoryItem';
 import { Picker } from '@react-native-picker/picker';
-
+import View from '../View';
+import { useDebounce } from 'use-debounce';
 
 const styles = StyleSheet.create({
   separator: {
@@ -13,7 +14,26 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: theme.colors.backgroundMain
-  }
+  },
+  inputContainer: {
+    padding:10,
+    backgroundColor: theme.colors.backgroundMain
+  },
+
+  formInput:{
+    borderRadius:5,
+    padding:10,
+    fontSize:17,
+    backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+      },
 });
 
 const OrderPicker = ({ orderBy, setOrderBy }) => {
@@ -31,7 +51,20 @@ const OrderPicker = ({ orderBy, setOrderBy }) => {
   );
 };
 
-export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy }) => {
+const Filter = ({filter, setFilter}) => {
+
+  return(
+    <View style={styles.inputContainer}>
+      <TextInput
+      style={styles.formInput}
+      onChangeText={text => setFilter(text)}
+      value={filter} 
+      />
+    </View>
+  );
+};
+
+export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy, filter, setFilter }) => {
   
   const history = useHistory();
 
@@ -51,14 +84,17 @@ export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy }) 
   };
   
   return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={renderItem}
-      keyExtractor={(item)=>item.id}
-      style={styles.container}
-      ListHeaderComponent={() => <OrderPicker orderBy = {orderBy} setOrderBy={setOrderBy}/>}
-    />
+    <>
+      <Filter filter={filter} setFilter={setFilter}/>
+      <FlatList
+        data={repositoryNodes}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={renderItem}
+        keyExtractor={(item)=>item.id}
+        style={styles.container}
+        ListHeaderComponent={() => <OrderPicker orderBy = {orderBy} setOrderBy={setOrderBy}/>}
+      />
+    </>
   );
 };
 
@@ -66,9 +102,10 @@ const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
   const [orderBy, setOrderBy] = useState(null);
-  const {repositories} = useRepositories(orderBy);
-
-  return <RepositoryListContainer repositories={repositories} orderBy = {orderBy} setOrderBy={setOrderBy} />;
+  const [filter, setFilter] = useState('');
+  const [debouncedFilter] = useDebounce(filter, 500);
+  const {repositories} = useRepositories(orderBy, debouncedFilter);
+  return <RepositoryListContainer repositories={repositories} orderBy = {orderBy} setOrderBy={setOrderBy} filter={filter} setFilter={setFilter} />;
 };
 
 export default RepositoryList;

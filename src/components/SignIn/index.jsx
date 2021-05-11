@@ -4,7 +4,7 @@ import {Pressable, StyleSheet} from 'react-native';
 import FormikTextInput from '../FormikTextInput';
 import { Formik } from 'formik';
 import View from '../View';
-import themes from '../../theme';
+import theme from '../../theme';
 import * as yup from 'yup';
 import useSignIn from '../../hooks/useSignIn';
 import { useHistory } from 'react-router-native';
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     padding:10
   },
   formInput:{
-    borderColor: themes.colors.textSecondary,
+    borderColor: theme.colors.textSecondary,
     borderWidth: 1,
     borderRadius: 3,
     padding:10,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     marginBottom:10,
     display:'flex',
     justifyContent:'center',
-    backgroundColor: themes.colors.primary
+    backgroundColor: theme.colors.primary
   },
   buttonText:{
     fontSize:17,
