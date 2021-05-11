@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import { useHistory } from 'react-router';
 import useRepositories from '../../hooks/useRepositories';
 import theme from '../../theme';
 import RepositoryItem from '../RepositoryItem';
+import { Picker } from '@react-native-picker/picker';
+
 
 const styles = StyleSheet.create({
   separator: {
@@ -14,7 +16,22 @@ const styles = StyleSheet.create({
   }
 });
 
-export const RepositoryListContainer = ({ repositories }) => {
+const OrderPicker = ({ orderBy, setOrderBy }) => {
+  return(
+    <Picker 
+      style={{height:60}} 
+      onValueChange={(itemValue) => setOrderBy(itemValue)}
+      selectedValue={orderBy} 
+    >
+      <Picker.Item style={{fontColor:'red'}} label="Last reviewed" value="null" />
+      <Picker.Item label="Latest repositories" value="latest" />
+      <Picker.Item label="Highest rated repositories" value="highestRated" />
+      <Picker.Item label="Lowest rated repositories" value="lowestRated" />
+    </Picker>
+  );
+};
+
+export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy }) => {
   
   const history = useHistory();
 
@@ -32,7 +49,7 @@ export const RepositoryListContainer = ({ repositories }) => {
       </Pressable>
     );
   };
-
+  
   return (
     <FlatList
       data={repositoryNodes}
@@ -40,6 +57,7 @@ export const RepositoryListContainer = ({ repositories }) => {
       renderItem={renderItem}
       keyExtractor={(item)=>item.id}
       style={styles.container}
+      ListHeaderComponent={() => <OrderPicker orderBy = {orderBy} setOrderBy={setOrderBy}/>}
     />
   );
 };
@@ -47,9 +65,10 @@ export const RepositoryListContainer = ({ repositories }) => {
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const {repositories} = useRepositories();
+  const [orderBy, setOrderBy] = useState(null);
+  const {repositories} = useRepositories(orderBy);
 
-  return <RepositoryListContainer repositories={repositories}/>;
+  return <RepositoryListContainer repositories={repositories} orderBy = {orderBy} setOrderBy={setOrderBy} />;
 };
 
 export default RepositoryList;

@@ -15,8 +15,8 @@ const REPO_DETAILS = gql`
 `;
 
 export const GET_REPOSITORIES = gql`
-  query Repositories{
-    repositories {
+  query Repositories($orderBy:AllRepositoriesOrderBy, $orderDirection:OrderDirection){
+    repositories(orderBy:$orderBy, orderDirection: $orderDirection){
       edges{
         node{
           ...RepoDetails

@@ -7,7 +7,7 @@ const useCreateReview = () => {
   const createReview = async (reviewData) => {
     const { data } = await mutate({ variables:  {...reviewData,rating: parseInt(reviewData.rating)}
     });
-    return { data };
+    return data;
   };
 
   return [createReview];

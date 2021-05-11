@@ -77,7 +77,7 @@ const CreateReview = () => {
   const history = useHistory();
   const onSubmit = async (values) => {
     try {
-      const { data } = await createReview(values);
+      const data = await createReview(values);
       history.push(`/repository/${data.createReview.repositoryId}`);
     } catch(e) {
       console.log('error: ',e);
