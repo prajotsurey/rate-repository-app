@@ -70,6 +70,7 @@ const ReviewItem = ({review}) => {
 
 const SingleRepository = () => {
   const { slug } = useParams();
+  console.log(slug);
   const { repository } = useRepository(slug);
   const reviews = repository
   ? repository.reviews.edges.map(edge => edge.node)

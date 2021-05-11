@@ -41,11 +41,18 @@ const AppBar = () => {
         </Link>
       </Pressable>
       {data
-      ? <Pressable onPress={signOut}>
+      ? <>
+        <Link to="/create-review" style={{paddingRight:10}}>
+          <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
+            Create-review
+          </Text>
+        </Link>
+        <Pressable onPress={signOut}>
           <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
             Sign-out
           </Text>
         </Pressable>
+        </>
       : <Link to="/signin" style={{paddingRight:10}}>
           <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
             Sign-in
