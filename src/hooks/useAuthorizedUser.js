@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { GET_AUTHORIZED_USER } from '../graphql/queries';
 
 const useAuthorizedUser = (includeReviews=false,first) => {
-  const { data, loading, fetchMore } = useQuery(GET_AUTHORIZED_USER, {
+  const { data, loading, fetchMore, refetch } = useQuery(GET_AUTHORIZED_USER, {
     fetchPolicy: 'cache-and-network',
     variables:{
       includeReviews,
@@ -27,6 +27,7 @@ const useAuthorizedUser = (includeReviews=false,first) => {
   return{
     data:data?.authorizedUser,
     fetchMore: handleFetchMore,
+    refetch
   };
 };
 

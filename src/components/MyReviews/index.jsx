@@ -1,10 +1,12 @@
 import React from 'react';
 import Text from '../Text';
 import useAuthorizedUser from '../../hooks/useAuthorizedUser';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Alert } from 'react-native';
 import View from '../View';
 import theme from '../../theme';
 import { format } from 'date-fns';
+import { useHistory } from 'react-router';
+import useDeleteReview from '../../hooks/useDeleteReview';
 
 const styles = StyleSheet.create({
   mainContainer : {
@@ -28,39 +30,98 @@ const styles = StyleSheet.create({
   },
   background:{
     backgroundColor:theme.colors.backgroundMain
+  },
+  buttonContainer:{
+  },
+  button:{
+    display: 'flex',
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    borderRadius:5,
+  },
+  ViewButton:{
+    marginRight:5,
+    backgroundColor:theme.colors.primary,
+  },
+  DeleteButton:{
+    marginLeft:5,
+    backgroundColor:"red",
   }
 });
 
-const ReviewItem = ({review}) => {
+const ReviewItem = ({review, refetch}) => {
+  const history = useHistory();
+  const { deleteReview } = useDeleteReview();
+
+  const viewRepo = () => {
+    history.push(`/repository/${review.repositoryId}`);
+  };
+
+  const deleteReviewHandler = async() => {
+    await deleteReview(review.id);
+    refetch();
+  };
+
+  const deleteReviewAlert = () =>
+    Alert.alert(
+      "Delele Review",
+      "Are you sure you want to delete this review",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "Delete", 
+          onPress: deleteReviewHandler
+        }
+      ]
+    );
+
   return(
-    <View flexDirection="row" style={styles.mainContainer}>
-      <View style={styles.ratingContainer}>
-        <Text>
-          {review.rating}
-        </Text>
-      </View>
-      <View style={styles.rightContainer}>
-        <Text fontWeight="bold" style={{marginBottom:5}}>
-          {review.repository.fullName}
-        </Text>
-        <Text color="textSecondary" style={{marginBottom:5}}>
-          {format(new Date(review.createdAt), "dd.MM.yyyy")}
-        </Text>
-        <View flexDirection="row" style={{marginBottom:5}}>
-          <Text style={{flex:1}}>
-            {review.text}
+    <View style={styles.mainContainer}>
+      <View flexDirection="row" >
+        <View style={styles.ratingContainer}>
+          <Text>
+            {review.rating}
           </Text>
         </View>
+        <View style={styles.rightContainer}>
+          <Text fontWeight="bold" style={{marginBottom:5}}>
+            {review.repository.fullName}
+          </Text>
+          <Text color="textSecondary" style={{marginBottom:5}}>
+            {format(new Date(review.createdAt), "dd.MM.yyyy")}
+          </Text>
+          <View flexDirection="row" style={{marginBottom:5}}>
+            <Text style={{flex:1}}>
+              {review.text}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View flexDirection='row' styles={styles.buttonContainer}>
+        <Pressable style={{...styles.button, ...styles.ViewButton}} onPress={viewRepo}>
+          <Text fontWeight="bold" style={{color:"white"}}>
+            View Repository
+          </Text>
+        </Pressable>
+        <Pressable style={{...styles.button, ...styles.DeleteButton}} onPress={deleteReviewAlert}>
+          <Text fontWeight="bold" style={{color:"white"}}>
+            Delete Review
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
 };
 
-const MyReviewsContainer = ({reviews, onEndReach}) => {
+const MyReviewsContainer = ({reviews, onEndReach, refetch}) => {
   return (
     <FlatList
       data={reviews}
-      renderItem={({ item }) => <ReviewItem review={item} />}
+      renderItem={({ item }) => <ReviewItem review={item} refetch={refetch}/>}
       keyExtractor={({ id }) => id}
       style={styles.background}
       onEndReached={onEndReach}
@@ -70,7 +131,7 @@ const MyReviewsContainer = ({reviews, onEndReach}) => {
 };
 
 const MyReviews  = () => {
-  const  {data, fetchMore} = useAuthorizedUser(true,7);
+  const  {data, fetchMore, refetch} = useAuthorizedUser(true,7);
   const reviews = data
   ? data.reviews.edges.map(r => r.node)
   : [];
@@ -80,7 +141,7 @@ const MyReviews  = () => {
   };
 
   return(
-    <MyReviewsContainer reviews={reviews} onEndReach={onEndReach}/>
+    <MyReviewsContainer reviews={reviews} onEndReach={onEndReach} refetch={refetch}/>
   );
 };
 
