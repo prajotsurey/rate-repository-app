@@ -5,7 +5,7 @@ import theme from '../../theme';
 import Text from '../Text';
 import View from '../View';
 import { Link, useHistory } from "react-router-native";
-import useAuthorize from "../../hooks/useAuthorize";
+import useAuthorizedUser from "../../hooks/useAuthorizedUser";
 import useAuthStorage from '../../hooks/useAuthStorage';
 import { useApolloClient } from '@apollo/client';
 
@@ -20,11 +20,12 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const { data } = useAuthorize();
+  const { data } = useAuthorizedUser();
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
   const history = useHistory();
   const signOut = () => {
+    console.log('here');
     authStorage.removeAccessToken();
     apolloClient.resetStore();
     history.push('/signin');
@@ -45,6 +46,11 @@ const AppBar = () => {
         <Link to="/create-review" style={{paddingRight:10}}>
           <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
             Create-review
+          </Text>
+        </Link>
+        <Link to="/my-reviews" style={{paddingRight:10}}>
+          <Text fontWeight="bold" fontSize="heading" style={{color:'white'}}>
+            My-reviews
           </Text>
         </Link>
         <Pressable onPress={signOut}>

@@ -64,7 +64,7 @@ const Filter = ({filter, setFilter}) => {
   );
 };
 
-export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy, filter, setFilter }) => {
+export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy, filter, setFilter, onEndReach }) => {
   
   const history = useHistory();
 
@@ -93,6 +93,8 @@ export const RepositoryListContainer = ({ repositories,  orderBy, setOrderBy, fi
         keyExtractor={(item)=>item.id}
         style={styles.container}
         ListHeaderComponent={() => <OrderPicker orderBy = {orderBy} setOrderBy={setOrderBy}/>}
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.5}
       />
     </>
   );
@@ -104,8 +106,20 @@ const RepositoryList = () => {
   const [orderBy, setOrderBy] = useState(null);
   const [filter, setFilter] = useState('');
   const [debouncedFilter] = useDebounce(filter, 500);
-  const {repositories} = useRepositories(orderBy, debouncedFilter);
-  return <RepositoryListContainer repositories={repositories} orderBy = {orderBy} setOrderBy={setOrderBy} filter={filter} setFilter={setFilter} />;
+  const {repositories, fetchMore} = useRepositories(orderBy, debouncedFilter,8);
+
+  const onEndReach = () => {
+    fetchMore();
+  };
+
+  return <RepositoryListContainer 
+    repositories={repositories} 
+    orderBy = {orderBy} 
+    setOrderBy={setOrderBy} 
+    filter={filter} 
+    setFilter={setFilter} 
+    onEndReach={onEndReach}
+  />;
 };
 
 export default RepositoryList;

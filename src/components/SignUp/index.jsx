@@ -70,8 +70,8 @@ const SignUpContainer = ({onSubmit}) => {
 
 const SignUp = () => {
     const [signUp] = useCreateUser();
-    const onSubmit = async (values) => {
     const history = useHistory();
+    const onSubmit = async (values) => {
     try {
       await signUp(values);
       history.push('/signin');

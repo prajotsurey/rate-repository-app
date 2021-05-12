@@ -1,10 +1,8 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
-import { useParams } from 'react-router-native';
-import useRepository from '../../hooks/useRepository';
-import RepositoryItem from '../RepositoryItem';
-import View from '../View';
 import Text from '../Text';
+import useAuthorizedUser from '../../hooks/useAuthorizedUser';
+import { FlatList, StyleSheet } from 'react-native';
+import View from '../View';
 import theme from '../../theme';
 import { format } from 'date-fns';
 
@@ -33,16 +31,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const RepositoryInfo = ({repository}) => {
-
-  if(!repository){
-    return null;  
-  }
-  return(
-    <RepositoryItem item={repository} showButton={true}/>
-  );
-};
-
 const ReviewItem = ({review}) => {
   return(
     <View flexDirection="row" style={styles.mainContainer}>
@@ -53,7 +41,7 @@ const ReviewItem = ({review}) => {
       </View>
       <View style={styles.rightContainer}>
         <Text fontWeight="bold" style={{marginBottom:5}}>
-          {review.user.username}
+          {review.repository.fullName}
         </Text>
         <Text color="textSecondary" style={{marginBottom:5}}>
           {format(new Date(review.createdAt), "dd.MM.yyyy")}
@@ -68,13 +56,12 @@ const ReviewItem = ({review}) => {
   );
 };
 
-const SingleRepositoryContainer = ({ reviews,repository, onEndReach }) => {
+const MyReviewsContainer = ({reviews, onEndReach}) => {
   return (
     <FlatList
       data={reviews}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
-      ListHeaderComponent={() => <RepositoryInfo repository = {repository} />}
       style={styles.background}
       onEndReached={onEndReach}
       onEndReachedThreshold={0.5}
@@ -82,19 +69,19 @@ const SingleRepositoryContainer = ({ reviews,repository, onEndReach }) => {
   );
 };
 
-
-const SingleRepository = () => {
-  const { slug } = useParams();
-  const { repository, fetchMore } = useRepository(slug,5);
-  const reviews = repository
-  ? repository.reviews.edges.map(edge => edge.node)
+const MyReviews  = () => {
+  const  {data, fetchMore} = useAuthorizedUser(true,7);
+  const reviews = data
+  ? data.reviews.edges.map(r => r.node)
   : [];
 
   const onEndReach = () => {
     fetchMore();
   };
 
-  return(<SingleRepositoryContainer reviews={reviews} repository={repository} onEndReach={onEndReach}/>);
+  return(
+    <MyReviewsContainer reviews={reviews} onEndReach={onEndReach}/>
+  );
 };
 
-export default SingleRepository;
+export default MyReviews;
